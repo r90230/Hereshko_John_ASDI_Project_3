@@ -1,6 +1,4 @@
-var db = Ti.Database.open('userDatabase');
-db.file.setRemoteBackup(false);
-db.execute('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, user TEXT, pass TEXT, userid INTEGER);');
+
 
 //Text Field and Label
 	//Main site field
@@ -275,7 +273,11 @@ var passVerifyCheck = function(){
 		alert("Passwords do not match!");
 	}else if (passSignupField.value === passVerifyField.value){
 		alert("Successful signup!");
-		var addRows = db.execute('INSERT INTO users (email,user,pass,userid) VALUES ("'+emailField.value+'","'+userSignupField.value+'", "'+passSignupField.value+'", "'+userIDField.value+'")');
+		var db = Ti.Database.open('userDatabase');
+		db.file.setRemoteBackup(false);
+		db.execute('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, user TEXT, pass TEXT, userid INTEGER);');
+		
+		var addRows = db.execute('INSERT INTO users (email,user,pass,userid) VALUES ("?,?,?,?", emailField.value, userSignupField.value, passVerifyField.value,userIDField.value)');
 		addRows;
 	};
 };
