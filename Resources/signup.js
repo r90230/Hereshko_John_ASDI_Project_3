@@ -275,10 +275,26 @@ var passVerifyCheck = function(){
 		alert("Successful signup!");
 		var db = Ti.Database.open('userDatabase');
 		db.file.setRemoteBackup(false);
-		db.execute('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, user TEXT, pass TEXT, userid INTEGER);');
+		db.execute('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT, user TEXT, pass TEXT, userid TEXT);');
+		db.close();
 		
-		var addRows = db.execute('INSERT INTO users (email,user,pass,userid) VALUES ("?,?,?,?", emailField.value, userSignupField.value, passVerifyField.value,userIDField.value)');
-		addRows;
+		db.execute('INSERT INTO users (email,user,pass,userid) VALUES (?,?,?,?)', emailField.value, userSignupField.value, passVerifyField.value, userIDField.value);
+		
+		var userList = db.execute('SELECT * FROM users');
+				console.log(userList);
+		while (userList.isValidRow())
+			{
+				var emailAddress = userList.fieldByName('email');
+				var username = userList.fieldByName('user');
+				var password = userList.fieldByName('pass');
+				var userID = userList.fieldByName('userid');
+				Ti.API.info(this.emailAddress + ' ' + this.username + ' ' + this.password  + ' ' + this.userID);
+				userList.next();
+			}
+		userList.close();
+		console.log(userList);	
+		
+		navWindow.closeWindow(newWindow);
 	};
 };
 
